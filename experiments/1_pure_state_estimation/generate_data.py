@@ -1,6 +1,13 @@
 import os
 import pathlib
 
+# >>> add: tame BLAS/OpenMP threads on macOS to avoid segfaults
+os.environ.setdefault("OMP_NUM_THREADS", "1")
+os.environ.setdefault("OPENBLAS_NUM_THREADS", "1")
+os.environ.setdefault("MKL_NUM_THREADS", "1")
+os.environ.setdefault("VECLIB_MAXIMUM_THREADS", "1")
+os.environ.setdefault("NUMEXPR_NUM_THREADS", "1")
+
 import numpy as np
 import numpy.random as npr
 import torch
@@ -8,6 +15,27 @@ from scipy.integrate import solve_ivp
 from scipy.special import comb
 from scipy.interpolate import interp1d
 from tqdm import tqdm
+
+from svise import odes
+from svise import utils
+
+save_dir = pathlib.Path(__file__).parent.resolve()
+save_dir = os.path.join(save_dir, "data")
+# >>> add: ensure directory exists
+os.makedirs(save_dir, exist_ok=True)
+
+# setting seeds
+rs = 2023
+np.random.seed(rs)
+torch.manual_seed(rs)
+torch.set_default_dtype(torch.float64)
+# >>> add: limit torch CPU thread usage (stability/perf on macOS)
+try:
+    torch.set_num_threads(1)
+except Exception:
+    pass
+
+degree = 5
 
 from svise import odes
 from svise import utils

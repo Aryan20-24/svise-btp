@@ -1,0 +1,22 @@
+name: svise
+channels:
+  - pytorch
+  - conda-forge
+dependencies:
+  - python=3.10
+  - pip
+  - pytorch           # macOS arm64 build, uses MPS (Metal) if available
+  - torchvision
+  - torchaudio
+  - numpy
+  - scipy
+  - pandas
+  - scikit-learn
+  - matplotlib
+  - tqdm
+  - pyyaml
+  - gpytorch
+  - botorch
+  - jupyter
+  - pip:
+      - torchsde>=0.2.6
